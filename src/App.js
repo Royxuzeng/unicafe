@@ -1,5 +1,17 @@
 import { useState } from 'react'
 
+const Button = ({ onClick, text }) => {
+  return <button onClick={onClick}>{text}</button>
+}
+
+const StatisticLine = ({ text, value }) => {
+  return (
+    <p>
+      {text}: {value}
+    </p>
+  )
+}
+
 
 const Statistics = ({ good, neutral, bad }) => {
   const totalFeedback = good + neutral + bad
@@ -9,12 +21,12 @@ const Statistics = ({ good, neutral, bad }) => {
   return (
     <>
       <h2>Statistics</h2>
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-      <p>Total feedback: {totalFeedback}</p>
-      <p>Average score: {averageScore.toFixed(2)}</p>
-      <p>Positive feedback: {positivePercentage.toFixed(2)}%</p>
+      <StatisticLine text="Good" value={good} />
+      <StatisticLine text="Neutral" value={neutral} />
+      <StatisticLine text="Bad" value={bad} />
+      <StatisticLine text="Total feedback" value={totalFeedback} />
+      <StatisticLine text="Average score" value={averageScore.toFixed(2)} />
+      <StatisticLine text="Positive feedback" value={`${positivePercentage.toFixed(2)}%`} />
     </>
   )
 }
@@ -24,10 +36,6 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-
-  const totalFeedback = good + neutral + bad
-  const averageScore = (good - bad) / totalFeedback || 0
-  const positivePercentage = (good / totalFeedback) * 100 || 0
 
   const handleGoodClick = () => {
     setGood(good + 1)
@@ -41,13 +49,19 @@ const App = () => {
     setBad(bad + 1)
   }
 
+  const totalFeedback = good + neutral + bad
+
   return (
     <div>
       <h1>Give feedback</h1>
-      <button onClick={handleGoodClick}>good</button>
-      <button onClick={handleNeutralClick}>neutral</button>
-      <button onClick={handleBadClick}>bad</button>
-      <Statistics good={good} neutral={neutral} bad={bad} />
+      <Button onClick={handleGoodClick} text="good" />
+      <Button onClick={handleNeutralClick} text="neutral" />
+      <Button onClick={handleBadClick} text="bad" />
+      {totalFeedback > 0 ? (
+        <Statistics good={good} neutral={neutral} bad={bad} />
+      ) : (
+        <p>No feedback given</p>
+      )}
     </div>
   )
 }
